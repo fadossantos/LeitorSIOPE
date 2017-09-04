@@ -1,0 +1,123 @@
+<div id="corpoPrincipal">
+    <div class="container-fluid">
+        <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+            <div class="card-block">
+                <div class="row justify-content-between">
+                    <h3 class="text-justify col-6">Gestão de Investimentos</h3>
+                    <a class="col-2" th:onclick="'executaAjaxGet(\'/investimento/salvarInvestimento?idCliente='+${idCliente}+'\',\'espacoConteudo\', function(){}, function(){})'"><span
+                            class="fa fa-plus fa-2x"></span></a>
+
+                    <h3 class="text-justify col-2"><a onclick="executaAjaxGet('/cliente/gestaoCliente','corpoPrincipal', function(){}, function(){})">Voltar</a></h3>
+                </div>
+                <div id="espacoConteudo">
+                    <div th:if="${mensagem} != null">
+                        <h3 th:text="${mensagem}"></h3>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+                    <div class="card-block">
+                        <table id="tabelaInvestimentos" class="table display responsive nowrap table-hover"
+                               cellspacing="0"
+                               width="100%">
+                            <thead class="thead-default">
+                            <tr>
+                                <th>Id</th>
+                                <th>Tipo Investimento</th>
+                                <th>Situação Investimento</th>
+                                <th>Saldo Atual</th>
+                                <th>Editar</th>
+                                <th>Transações</th>
+                                <th>Remover</th>
+                            </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+                <script th:inline="javascript">
+
+                /*<![CDATA[*/
+                    var idClienteJS = [[${idCliente}]];
+                    var caminhoUrl = '/dt/investimento/investimentoPorCliente/' + [[${idCliente}]];
+                    $('table#tabelaInvestimentos')
+                            .DataTable(
+                                    {
+                                        language : {
+                                            'url' : '/static/js/portuguese.json'
+                                        },
+                                        ajax : {
+                                            'url' : caminhoUrl,
+                                            'contentType' : 'application/json',
+                                            'type' : 'POST',
+                                            'data' : function(d) {
+                                                return JSON.stringify(d);
+                                            }
+                                        },
+                                        serverSide : true,
+                                        columns : [
+                                                {
+                                                    data : 'idInvestimento'
+                                                },
+                                                {
+                                                    data : 'tipoInvestimento.descTipoInvestimento'
+                                                },
+                                                {
+                                                    data : 'situacaoInvestimento.descSituacaoInvestimento'
+                                                },
+                                                {
+                                                    data : 'SaldoAtual',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        var somaTotal = 0;
+                                                        row.transacoes.forEach(
+                                                            function(item, index){
+                                                                somaTotal = somaTotal + item.montante;
+                                                                arredondado = parseFloat(somaTotal.toFixed(2));
+                                                            }
+                                                        );
+                                                        return arredondado;
+                                                    }
+                                                },
+                                                {
+                                                    data : 'editar',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        return '<a href="#" onclick = "executaAjaxGet(\'/investimento/salvarInvestimento?idCliente='
+                                                        + idClienteJS
+                                                        + '&idInvestimento=' + row.idInvestimento + '\',\'espacoConteudo\',function(){},function(){})"><span class="fa fa-pencil"> </span></a>';
+                                                    }
+                                                },
+                                                 {
+                                                    data : 'transacoes',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        return '<a href="#" onclick = "executaAjaxGet(\'/transacao/gestaoTransacao/'
+                                                        + row.idInvestimento
+                                                        + '\',\'corpoPrincipal\',function(){},function(){})"><span class="fa fa-usd"> </span></a>';
+                                                    }
+                                                },
+                                                {
+                                                    data : 'remover',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        return '<a href="#" onclick = "executaAjaxGet(\'/investimento/removerInvestimento/'
+                                                        + row.idInvestimento
+                                                        + '\',\'espacoConteudo\',function(){},function(){})"><span class="fa fa-trash"> </span></a>';
+                                                    }
+                                                }],
+                                        "order" : [ [ 0, "desc" ] ]
+                                    });
+                /*]]>*/
+
+                </script>
+            </div>
+        </div>
+    </div>
+
+    <footer id="myFooter" th:replace="fragments/_footerCompleto"/>
+</div>

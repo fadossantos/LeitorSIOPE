@@ -1,0 +1,90 @@
+<div id="menuNavegacao">
+
+    <nav class="navbar navbar-custom navbar-toggleable-md navbar-inverse">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false"
+                aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <a class="navbar-brand" href="/">
+            <img src="../static/images/logo.png" width="307" height="91" class="d-inline-block align-top"
+                 alt=""/>
+        </a>
+
+        <div class="collapse navbar-collapse navbar-custom2" id="navbarNavDropdown">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Sobre a SEduc
+                    </a>
+                    <div class="dropdown-menu inverse" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item inverse"
+                           onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">História</a>
+                        <a class="dropdown-item inverse"
+                           onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Localização</a>
+                    </div>
+                </li>
+
+
+
+                <li class="nav-item dropdown" sec:authorize="hasAuthority('User')">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Serviços
+                    </a>
+                    <div class="dropdown-menu inverse" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item inverse" th:if="${cliente} != null"
+                           th:onclick="'executaAjaxGet(\'/construcao\', \'corpoPrincipal\', function(){}, function(){})'">Teste</a>
+                        <a class="dropdown-item inverse"
+                           onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Teste</a>
+                        <a class="dropdown-item inverse"
+                           onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Teste</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown" sec:authorize="hasAuthority('Admin')">
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        Administração
+                    </a>
+                    <div class="dropdown-menu inverse" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item inverse"
+                           onclick="executaAjaxGet('/cliente/gestaoCliente', 'corpoPrincipal', function(){}, function(){})">Gestão Clientes</a>
+                    </div>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link"
+                       onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Contato</a>
+                </li>
+
+
+            </ul>
+            <ul class="navbar-nav">
+                <div sec:authorize="isAuthenticated()">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                           aria-haspopup="true" aria-expanded="false">
+                            <span sec:authentication="name">Bob</span>
+                        </a>
+                        <div class="dropdown-menu dropdown-menu-right inverse" aria-labelledby="navbarDropdownMenuLink">
+                            <a class="dropdown-item inverse" onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Sugestões</a>
+                            <a class="dropdown-item inverse" onclick="executaAjaxGet('/construcao', 'corpoPrincipal', function(){}, function(){})">Troca de Senha</a>
+                            <a class="dropdown-item inverse" href="/logout"><span class="fa fa-sign-out"
+                                                                                  aria-hidden="true"></span> Sair</a>
+                        </div>
+                    </li>
+                </div>
+                <div sec:authorize="isAuthenticated() == false">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#modalLogin"
+                           onclick="executaAjaxGet('/login','modalLoginBody',function(){},function(){})"><span
+                                class="fa fa-sign-in" aria-hidden="true"></span> Entrar</a>
+                    </li>
+                </div>
+            </ul>
+        </div>
+    </nav>
+</div>

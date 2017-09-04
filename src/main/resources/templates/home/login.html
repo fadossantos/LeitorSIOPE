@@ -1,0 +1,48 @@
+<div class="modal-body" id="modalLoginBody">
+    <form id="formLogin" class="form-signin" role="form" action="login" th:action="@{/login}"
+          th:object="${formLogin}" method="post">
+        <input class="form-control" placeholder="Usuário" name="username"
+               type="text" autofocus="true" th:field="${formLogin.username}"
+               value="" required="true"
+        />
+        <input class="form-control" placeholder="Senha" name="password"
+               type="password" th:field="${formLogin.password}" required="true"
+        />
+        <button class="btn btn-lg btn-primary btn-block" type="submit" value="Entrar">Entrar</button>
+        <div th:if="${param.error}">
+            <h5>Erro na autenticação.</h5>
+        </div>
+        <div th:if="${param.logout}">
+            <h5>Sessão encerrada.</h5>
+        </div>
+    </form>
+    <script>
+
+					$("#formLogin").submit(function(e) {
+  						var url = "/login";
+  						$.ajax({
+  							type: "POST",
+  							url: url,
+  							data: $("#formLogin").serialize(),
+  							success: function(data)
+  							{
+  								if(data.indexOf("Erro na autenticação.") != -1){
+  									$('#modalLoginBody').replaceWith(data);
+  								}
+  								else
+  								{
+  									$('#menuNavegacao').replaceWith(data);
+  									executaAjaxGet('/home', 'corpoPrincipal', function(){}, function(){});
+  									$('#modalLogin').modal('hide')
+  								}
+  							}
+  						});
+  						e.preventDefault();
+  					});
+    </script>
+</div>
+
+
+
+
+

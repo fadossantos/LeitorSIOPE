@@ -1,0 +1,83 @@
+<div id="corpoPrincipal">
+    <div class="container-fluid">
+        <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+            <div class="card-block">
+                <div class="row justify-content-between">
+                    <h3 class="text-justify col-3">Gestão de Funcionarios</h3>
+                    <a class="col-1" onclick="executaAjaxGet('/funcionario/salvarFuncionario','espacoFuncionario', function(){}, function(){})"><span
+                            class="fa fa-plus fa-2x"></span></a>
+                </div>
+                <div id="espacoFuncionario">
+                    <div th:if="${mensagem} != null">
+                        <h3 th:text="${mensagem}"></h3>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+                    <div class="card-block">
+                        <table id="tabelaFuncionarios" class="table display responsive nowrap table-hover" cellspacing="0" width="100%">
+                            <thead class="thead-default">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nome</th>
+                                <th>Editar</th>
+                                <th>Remover</th>
+                            </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+                <script>
+                    $('table#tabelaFuncionarios')
+                            .DataTable(
+                                    {
+                                        language : {
+                                            'url' : '/static/js/portuguese.json'
+                                        },
+                                        ajax : {
+                                            'url' : '/dt/funcionarios',
+                                            'contentType' : 'application/json',
+                                            'type' : 'POST',
+                                            'data' : function(d) {
+                                                return JSON.stringify(d);
+                                            }
+                                        },
+                                        serverSide : true,
+                                        columns : [
+                                                {
+                                                    data : 'idPessoa'
+                                                },
+                                                {
+                                                    data : 'nome'
+                                                },
+                                                {
+                                                    data : 'editar',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        return '<a href="#" onclick = "executaAjaxGet(\'/funcionario/salvarFuncionario?idFuncionario='
+                                                        + row.idPessoa
+                                                        + '\',\'espacoFuncionario\',function(){},function(){})"><span class="fa fa-pencil"> </span></a>';
+                                                    }
+                                                },
+                                                {
+                                                    data : 'remover',
+                                                    searchable: false,
+                                                    orderable: false,
+                                                    render : function (data, type, row) {
+                                                        return '<a href="#" onclick = "executaAjaxGet(\'/funcionario/removerFuncionario/'
+                                                        + row.idPessoa
+                                                        + '\',\'espacoFuncionario\',function(){},function(){})"><span class="fa fa-trash"> </span></a>';
+                                                    }
+                                                }
+                                                ],
+                                        "order" : [ [ 0, "desc" ] ]
+                                    });
+                </script>
+
+            </div>
+        </div>
+    </div>
+    <footer id="myFooter" th:replace="fragments/_footerCompleto"/>
+</div>

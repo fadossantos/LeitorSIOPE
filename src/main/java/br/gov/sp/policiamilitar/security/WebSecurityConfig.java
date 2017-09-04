@@ -1,5 +1,6 @@
 package br.gov.sp.policiamilitar.security;
 
+import br.gov.sp.policiamilitar.business.services.ContaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,7 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private ContaMvpnService contaMvpnService;
+    private ContaService contaService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -35,13 +36,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(contaMvpnService);
+        authProvider.setUserDetailsService(contaService);
         //authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+    //@Bean
+    //public PasswordEncoder passwordEncoder() {
+    //    return new BCryptPasswordEncoder();
+    //}
 }

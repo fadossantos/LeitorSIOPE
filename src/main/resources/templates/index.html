@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <!-- Required meta tags -->
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta http-equiv="Content-Language" content="pt-br"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content="Site SEduc"/>
+    <meta name="author" content="Fernando Andrade dos Santos"/>
+
+    <title>Secretaria da Educação</title>
+
+    <div th:replace="fragments/_css"/>
+
+</head>
+
+<body class="body-background">
+<div id = "menuNavegacao" th:replace="fragments/_menuNavegacao"/>
+
+<div id="corpoPrincipal" th:replace="fragments/_index"/>
+
+<div id="resultLoading" style="display: none">
+    <div>
+        <img src="/static/images/ajax-loader.gif"></img>
+        <div>Carregando</div>
+    </div>
+    <div class="bg"></div>
+</div>
+
+<div class="modal fade" id="modalLogin" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Login</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalLoginBody">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/_scripts"/>
+
+</body>
+</html>

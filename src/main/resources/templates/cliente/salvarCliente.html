@@ -1,0 +1,512 @@
+<div id="espacoCliente">
+    <div class="card" style="margin-top: 15px;margin-bottom: 15px;" th:if="${cliente} != null">
+        <div class="card-block">
+            <form id="formCliente" role="form" action="#" th:action="@{/cliente/salvarCliente}" method="post"
+                  th:object="${cliente}">
+                <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Dados
+                        Incorretos
+                    </li>
+                </ul>
+                <!--<div class="form-group">
+                    <label for="idPessoa">IdCliente</label>-->
+                <input type="hidden" th:field="*{idPessoa}"/>
+                <!--<input type="text" class="form-control" th:field="*{idPessoa}" aria-describedby="idPessoaHelp"
+                       placeholder="idCliente" th:errorclass="fieldError" disabled = "true"/>
+                <small id="idPessoaHelp" class="form-text text-muted">Id do Cliente.
+                </small>
+            </div>-->
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select class="form-control" th:field="*{status}" th:errorclass="fieldError">
+                        <option th:each="status : ${listaStatus}"
+                                th:value="${status.idStatus}"
+                                th:text="${status.descStatus}">Status
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" class="form-control" th:field="*{nome}" aria-describedby="nomeHelp"
+                           placeholder="Nome" th:errorclass="fieldError"/>
+                    <small id="nomeHelp" class="form-text text-muted">Preencha com o nome do cliente.</small>
+                </div>
+                <div class="form-group">
+                    <label for="nomePai">Nome do Pai</label>
+                    <input type="text" class="form-control" th:field="*{nomePai}" aria-describedby="nomePaiHelp"
+                           placeholder="Nome do Pai" th:errorclass="fieldError"/>
+                    <small id="nomePaiHelp" class="form-text text-muted">Preencha com o nome do pai do cliente.</small>
+                </div>
+                <div class="form-group">
+                    <label for="nomeMae">Nome da Mãe</label>
+                    <input type="text" class="form-control" th:field="*{nomeMae}" aria-describedby="nomeMaeHelp"
+                           placeholder="Nome da Mãe" th:errorclass="fieldError"/>
+                    <small id="nomeMaeHelp" class="form-text text-muted">Preencha com o nome da mãe do cliente.</small>
+                </div>
+                <div class="form-group">
+                    <label for="dataNascimento">Data de Nascimento</label>
+                    <input type="text" class="form-control usaCalendario" th:field="*{dataNascimento}"
+                           aria-describedby="dataNascimentoHelp"
+                           placeholder="Data de Nascimento" th:errorclass="fieldError"/>
+                    <small id="dataNascimentoHelp" class="form-text text-muted">Preencha com a data de nascimento do
+                        cliente.
+                    </small>
+                </div>
+                <div class="form-group">
+                    <input type="hidden" th:field="*{rg.idRG}"/>
+                    <label for="numeroRG">Número do RG</label>
+                    <input type="text" class="form-control" th:field="*{rg.numeroRG}" aria-describedby="numeroRGHelp"
+                           placeholder="Numero do RG" th:errorclass="fieldError"/>
+                    <small id="numeroRGHelp" class="form-text text-muted">Preencha com o numero do RG do cliente.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="estadoRG">Estado do RG</label>
+                    <select class="form-control" th:field="*{rg.estadoRG}" th:errorclass="fieldError">
+                        <option th:each="estado : ${listaEstadoRG}"
+                                th:value="${estado.idEstado}"
+                                th:text="${estado.descEstado}">EstadoRG
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cpf">CPF</label>
+                    <input type="text" class="form-control" th:field="*{cpf}" aria-describedby="cpfHelp"
+                           placeholder="CPF" th:errorclass="fieldError"/>
+                    <small id="cpfHelp" class="form-text text-muted">Preencha com o CPF do cliente.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="estadoCivil">Estado Civil</label>
+                    <select class="form-control" th:field="*{estadoCivil}" th:errorclass="fieldError">
+                        <option th:each="estadoCivil : ${listaEstadoCivil}"
+                                th:value="${estadoCivil.idEstadoCivil}"
+                                th:text="${estadoCivil.descEstadoCivil}">estadoCivil
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="ocupacao">Ocupação</label>
+                    <select class="form-control" th:field="*{ocupacao}" th:errorclass="fieldError">
+                        <option th:each="ocupacao : ${listaOcupacao}"
+                                th:value="${ocupacao.idOcupacao}"
+                                th:text="${ocupacao.descOcupacao}">ocupacao
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" class="btn btn-primary"
+                            onClick="addItemLista('adicionarEndereco')" name="addEndereco">Adicionar Endereço
+                    </button>
+                </div>
+
+                <div class="card card-block" style="margin-bottom: 15px;" id="Enderecos" th:each="endereco,enderecoStat : *{enderecos}">
+
+                    <div class="form-goup">
+                        <button type="button" class="btn btn-primary"
+                                th:onClick="'removeItemLista(\'removerEndereco\','+${enderecoStat.index}+');'"
+                                name="removerEndereco">Remover Endereço
+                        </button>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tipoEndereco">Tipo de Endereço</label>
+                        <select class="form-control" th:field="*{enderecos[__${enderecoStat.index}__].tipoEndereco}" th:errorclass="fieldError">
+                            <option th:each="tipoEndereco : ${listaTipoEndereco}"
+                                    th:value="${tipoEndereco.idTipoEndereco}"
+                                    th:text="${tipoEndereco.descTipoEndereco}">tipoEndereco
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cep">CEP</label>
+                        <input type="text" class="form-control" th:field="*{enderecos[__${enderecoStat.index}__].cep}"
+                               aria-describedby="cepHelp"
+                               placeholder="CEP" th:errorclass="fieldError"/>
+                        <small id="cepHelp" class="form-text text-muted">Preencha com o CEP do cliente.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="logradouro">Logradouro</label>
+                        <input type="hidden" th:field="*{enderecos[__${enderecoStat.index}__].idEndereco}"/>
+                        <input type="text" class="form-control"
+                               th:field="*{enderecos[__${enderecoStat.index}__].logradouro}"
+                               aria-describedby="logradouroHelp"
+                               placeholder="Logradouro" th:errorclass="fieldError"/>
+                        <small id="logradouroHelp" class="form-text text-muted">Preencha com o logradouro do cliente.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="numero">Número</label>
+                        <input type="text" class="form-control"
+                               th:field="*{enderecos[__${enderecoStat.index}__].numero}"
+                               aria-describedby="numeroHelp"
+                               placeholder="Numero" th:errorclass="fieldError"/>
+                        <small id="numeroHelp" class="form-text text-muted">Preencha com o número do endereço do
+                            cliente.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="complemento">Complemento</label>
+                        <input type="text" class="form-control"
+                               th:field="*{enderecos[__${enderecoStat.index}__].complemento}"
+                               aria-describedby="complementoHelp"
+                               placeholder="Complemento" th:errorclass="fieldError"/>
+                        <small id="complementoHelp" class="form-text text-muted">Preencha com o complemento do endereço
+                            do
+                            cliente.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="bairro">Bairro</label>
+                        <input type="text" class="form-control"
+                               th:field="*{enderecos[__${enderecoStat.index}__].bairro}"
+                               aria-describedby="bairroHelp"
+                               placeholder="Bairro" th:errorclass="fieldError"/>
+                        <small id="bairroHelp" class="form-text text-muted">Preencha com o bairro do cliente.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pais">País</label>
+                        <select class="form-control"
+                                th:field="*{enderecos[__${enderecoStat.index}__].cidade.estado.pais.idPais}"
+                                th:errorclass="fieldError"
+                                th:onChange="'executaAjaxGet(\'/estado/EstadoPorPais/\' + $(this).val() +\'?id='+${enderecoStat.index}+'\', \'selectEstado'+${enderecoStat.index}+'\', function(){$(\'#selectEstado'+${enderecoStat.index}+' select\').html(\'\');$(\'#selectCidade'+${enderecoStat.index}+' select\').html(\'\');}, function(){})'">
+                            <option th:each="pais : ${listaPaises}"
+                                    th:value="${pais.idPais}"
+                                    th:text="${pais.descPais}">País
+                            </option>
+                        </select>
+                    </div>
+
+                    <div th:id="'selectEstado'+${enderecoStat.index}" class="form-group">
+                        <label for="estado">Estado</label>
+                        <select class="form-control"
+                                th:field="*{enderecos[__${enderecoStat.index}__].cidade.estado.idEstado}"
+                                th:errorclass="fieldError"
+                                th:onChange="'executaAjaxGet(\'/cidade/CidadePorEstado/\' + $(this).val() +\'?id='+${enderecoStat.index}+'\', \'selectCidade'+${enderecoStat.index}+'\', function(){$(\'#selectCidade'+${enderecoStat.index}+' select\').html(\'\');}, function(){})'">
+
+                            <option th:each="estado : ${listaEstados__${enderecoStat.index}__}"
+                                    th:value="${estado.idEstado}"
+                                    th:text="${estado.descEstado}">Estado
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div th:id="'selectCidade'+${enderecoStat.index}" class="form-group">
+                        <label for="cidade">Cidade</label>
+                        <select class="form-control" th:field="*{enderecos[__${enderecoStat.index}__].cidade.idCidade}"
+                                th:errorclass="fieldError">
+
+                            <option th:each="cidade : ${listaCidades__${enderecoStat.index}__}"
+                                    th:value="${cidade.idCidade}"
+                                    th:text="${cidade.descCidade}">Cidade
+                            </option>
+
+                        </select>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <table class="table table-responsive">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo Telefone</th>
+                            <th>Cod País</th>
+                            <th>Cod Área</th>
+                            <th>Telefone</th>
+                            <th>
+                                <button type="button" class="btn btn-primary"
+                                        onClick="addItemLista('adicionarTelefone')" name="addTelefone">Adicionar
+                                    Telefone
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="telefone,telefoneStat : *{telefones}">
+                            <td th:text="${telefoneStat.count}">1</td>
+                            <td>
+                                <select class="form-control"
+                                        th:field="*{telefones[__${telefoneStat.index}__].tipoTelefone}">
+                                    <option th:each="tipoTelefone : ${listaTipoTelefone}"
+                                            th:value="${tipoTelefone.idTipoTelefone}"
+                                            th:text="${tipoTelefone.descTipoTelefone}">Tipo Telefone
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       th:field="*{telefones[__${telefoneStat.index}__].codPais}"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       th:field="*{telefones[__${telefoneStat.index}__].codArea}"/>
+                            </td>
+                            <td>
+                                <input type="hidden" th:field="*{telefones[__${telefoneStat.index}__].idTelefone}"/>
+                                <input type="text" class="form-control"
+                                       th:field="*{telefones[__${telefoneStat.index}__].numeroTelefone}"/>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                        th:onClick="'removeItemLista(\'removerTelefone\','+${telefoneStat.index}+');'"
+                                        name="removeTelefone">Remover Telefone
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Login MVPN</label>
+                    <input type="hidden" th:field="*{contaMvpn.idContaMvpn}"/>
+                    <input type="text" class="form-control" th:field="*{contaMvpn.username}"
+                           aria-describedby="usernameHelp"
+                           placeholder="Login MVPN" th:errorclass="fieldError"/>
+                    <small id="usernameHelp" class="form-text text-muted">Preencha com o login do Usuário para a
+                        ContaMVPN.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Senha MVPN</label>
+                    <input type="text" class="form-control" th:field="*{contaMvpn.password}"
+                           aria-describedby="passwordHelp"
+                           placeholder="Senha MVPN" th:errorclass="fieldError"/>
+                    <small id="passwordHelp" class="form-text text-muted">Preencha com a senha do Usuário para a
+                        ContaMVPN.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="permissoes">Permissoes</label>
+                    <div class="checkbox" th:each="obj : ${listaPermissoes}">
+                        <label> <input type="checkbox" th:field="*{contaMvpn.permissoes}"
+                                       th:value="${obj.idPermissoes}"/> <span
+                                th:for="${#ids.prev('contaMvpn.permissoes')}"
+                                th:text="${obj.descPermissoes}">permissoes</span></label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <table class="table table-responsive">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo Conta</th>
+                            <th>Login</th>
+                            <th>Senha</th>
+                            <th>Observação</th>
+                            <th>Assinatura</th>
+                            <th>
+                                <button type="button" class="btn btn-primary" onClick="addItemLista('adicionarConta')">
+                                    Adicionar Conta
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="conta,contaStat : *{contas}">
+                            <td th:text="${contaStat.count}">1</td>
+                            <td>
+                                <select class="form-control" th:field="*{contas[__${contaStat.index}__].tipoConta}">
+                                    <option th:each="tipoConta : ${listaTipoConta}"
+                                            th:value="${tipoConta.idTipoConta}"
+                                            th:text="${tipoConta.descTipoConta}">Tipo Conta
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="hidden" th:field="*{contas[__${contaStat.index}__].idConta}"/>
+                                <input type="text" class="form-control"
+                                       th:field="*{contas[__${contaStat.index}__].login}"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       th:field="*{contas[__${contaStat.index}__].senha}"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control"
+                                       th:field="*{contas[__${contaStat.index}__].assinatura}"/>
+                            </td>
+                            <td>
+                                <input type="hidden"
+                                       th:field="*{contas[__${contaStat.index}__].observacao.idObservacao}"/>
+                                <input type="text" class="form-control"
+                                       th:field="*{contas[__${contaStat.index}__].observacao.descObservacao}"/>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                        th:onClick="'removeItemLista(\'removerConta\','+${contaStat.index}+');'">Remover
+                                    Conta
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <table class="table table-responsive">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Tipo Investimento</th>
+                            <th>Situação</th>
+                            <th>Data Criação</th>
+                            <th>Observação</th>
+                            <th>
+                                <button type="button" class="btn btn-primary"
+                                        onClick="addItemLista('adicionarInvestimento')">Adicionar Investimento
+                                </button>
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="investimento,investimentoStat : *{investimentos}">
+                            <td th:text="${investimentoStat.count}">1</td>
+                            <td>
+                                <select class="form-control"
+                                        th:field="*{investimentos[__${investimentoStat.index}__].tipoInvestimento}">
+                                    <option th:each="tipoInvestimento : ${listaTipoInvestimento}"
+                                            th:value="${tipoInvestimento.idTipoInvestimento}"
+                                            th:text="${tipoInvestimento.descTipoInvestimento}">Tipo Investimento
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <select class="form-control"
+                                        th:field="*{investimentos[__${investimentoStat.index}__].situacaoInvestimento}">
+                                    <option th:each="situacao : ${listaSituacaoInvestimento}"
+                                            th:value="${situacao.idSituacaoInvestimento}"
+                                            th:text="${situacao.descSituacaoInvestimento}">Situacao Investimento
+                                    </option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="hidden"
+                                       th:field="*{investimentos[__${investimentoStat.index}__].idInvestimento}"/>
+                                <input type="text" class="form-control usaCalendario"
+                                       th:field="*{investimentos[__${investimentoStat.index}__].dataCriacao}"/>
+                            </td>
+                            <td>
+                                <input type="hidden"
+                                       th:field="*{investimentos[__${investimentoStat.index}__].observacao.idObservacao}"/>
+                                <input type="text" class="form-control"
+                                       th:field="*{investimentos[__${investimentoStat.index}__].observacao.descObservacao}"/>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-primary"
+                                        th:onClick="'removeItemLista(\'removerInvestimento\','+${investimentoStat.index}+');'">
+                                    Remover Investimento
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="form-group">
+                    <label for="banco">Banco</label>
+                    <input type="hidden" th:field="*{informacaoBancaria.idInformacaoBancaria}"/>
+                    <input type="text" class="form-control" th:field="*{informacaoBancaria.banco}"
+                           aria-describedby="bancoHelp"
+                           placeholder="Banco" th:errorclass="fieldError"/>
+                    <small id="bancoHelp" class="form-text text-muted">Digite o código do banco.</small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="agencia">Agência</label>
+                    <input type="text" class="form-control" th:field="*{informacaoBancaria.agencia}"
+                           aria-describedby="agenciaHelp"
+                           placeholder="Agência" th:errorclass="fieldError"/>
+                    <small id="agenciaHelp" class="form-text text-muted">Digite o código da agência.</small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="contaCorrente">Conta Corrente</label>
+                    <input type="text" class="form-control" th:field="*{informacaoBancaria.contaCorrente}"
+                           aria-describedby="contaCorrenteHelp"
+                           placeholder="Conta Corrente" th:errorclass="fieldError"/>
+                    <small id="contaCorrenteHelp" class="form-text text-muted">Digite o número da conta corrente.
+                    </small>
+                </div>
+
+
+                <div class="form-group">
+                    <label for="observacao">Observação</label>
+                    <input type="hidden" th:field="*{observacao.idObservacao}"/>
+                    <textarea class="form-control" th:field="*{observacao.descObservacao}"
+                              aria-describedby="observacaoHelp"
+                              placeholder="Observação" th:errorclass="fieldError"/>
+                    <small id="observacaoHelp" class="form-text text-muted">Observação sobre o cliente.</small>
+                </div>
+
+
+                <button type="button" onclick="submitFormCliente();" class="btn btn-primary">Salvar</button>
+            </form>
+            <script type="text/javascript">
+					function submitFormCliente() {
+  						var url = "/cliente/salvarCliente";
+  						$.ajax({
+  							type: "POST",
+  							url: url,
+  							data: $("#formCliente").serialize(),
+  							success: function(data)
+  							{
+  								$('#espacoCliente').replaceWith(data);
+  							}
+  						});
+  					};
+
+  					function addItemLista(metodo) {
+  						var url = "/cliente/" + metodo;
+  						$.ajax({
+  							type: "POST",
+  							url: url,
+  							data: $("#formCliente").serialize(),
+  							success: function(data)
+  							{
+  								$('#espacoCliente').replaceWith(data);
+  							}
+  						});
+  					};
+
+  					function removeItemLista(metodo, idItem) {
+  						var url = "/cliente/"+ metodo + "/" + idItem;
+  						$.ajax({
+  							type: "POST",
+  							url: url,
+  							data: $("#formCliente").serialize(),
+  							success: function(data)
+  							{
+  								$('#espacoCliente').replaceWith(data);
+  							}
+  						});
+  					};
+
+  					$('.usaCalendario').datetimepicker({
+		                format : 'd/m/Y'
+	                });
+
+
+
+            </script>
+        </div>
+    </div>
+</div>

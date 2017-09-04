@@ -1,5 +1,6 @@
 package br.gov.sp.policiamilitar.web.controller;
 
+  import br.gov.sp.policiamilitar.business.entities.Conta;
 import br.gov.sp.policiamilitar.web.mail.SmtpMailSender;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -65,7 +66,7 @@ public class HomeController {
     public ModelAndView login() {
         ModelAndView mav = new ModelAndView();
         mav.setViewName("home/login");
-        mav.addObject("formLogin", new ContaMvpn());
+        mav.addObject("formLogin", new Conta());
         mav.addObject("message", "");
         return mav;
     }

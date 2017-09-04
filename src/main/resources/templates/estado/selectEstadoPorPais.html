@@ -1,0 +1,10 @@
+<div th:id = "'selectEstado'+${id}" class="form-group">
+    <label for="estado">Estado</label>
+    <select class="form-control" th:id = "'enderecos'+${id}+'.cidade.estado.idEstado'" th:name = "'enderecos['+${id}+'].cidade.estado.idEstado'"
+            th:onChange="'executaAjaxGet(\'/cidade/CidadePorEstado/\' + $(this).val() +\'?id='+${id}+'\', \'selectCidade'+${id}+'\', function(){$(\'#selectCidade select\').html(\'\');}, function(){})'">
+        <option th:each="estado : ${listaEstados}"
+                th:value="${estado.idEstado}"
+                th:text="${estado.descEstado}">Estado
+        </option>
+    </select>
+</div>

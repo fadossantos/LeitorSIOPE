@@ -1,0 +1,126 @@
+<div id="corpoPrincipal">
+    <div class="container-fluid">
+        <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+            <div class="card-block">
+                <div class="row">
+                    <h3 class="text-justify col-12">Dashboard Investimentos - <span th:text="${cliente.nome}">Fernando Andrade dos Santos</span></h3>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div id="piechart" class="chart"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card" style="margin-top: 15px;margin-bottom: 15px;">
+                            <div class="card-block">
+                                <div id="listaTransacoes" class="scroll-box">
+                                    <div th:if="${not #lists.isEmpty(cliente.investimentos)}">
+                                    <h4 th:text="'Transações do ' + ${cliente.investimentos[0].tipoInvestimento.descTipoInvestimento}">Transações do XPTO</h4>
+                                    <br/>
+                                    <dl >
+                                        <div th:each="transacao:${cliente.investimentos[0].transacoes}" class="row">
+                                            <dt class = "col-sm-4" th:text="${transacao.tipoTransacao.descTipoTransacao}"></dt>
+                                            <dd class = "col-sm-4"><span th:text="'Data: ' + ${{transacao.dataTransacao}}"></span></dd>
+                                            <dd class = "col-sm-4"><span th:text="'Valor: ' + ${transacao.montante}"></span></dd>
+                                        </div>
+                                    </dl>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <div class="col-md-4" th:each="investimento : ${cliente.investimentos}">
+                        <div th:id="'linechart' + ${investimento.idInvestimento}" class="chart" style="margin-left: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="scripts">
+
+        <script id="graficoPizza" type="text/javascript"  th:inline="javascript">
+         /*<![CDATA[*/
+
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawPieChart);
+      function drawPieChart() {
+      var urlGraficoInvestimento = '/investimento/obterGraficoCliente/' + [[${cliente.idPessoa}]];
+
+      $.ajax({
+          url: urlGraficoInvestimento,
+          dataType: "json",
+          success: function(data){
+          var dataTableObject = new google.visualization.DataTable(data);
+          var options = {
+            title: 'Distribuição dos Investimentos',
+
+          };
+          var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+          function selectHandler() {
+          var selectedItem = chart.getSelection()[0];
+          if (selectedItem) {
+            var topping = dataTableObject.getValue(selectedItem.row, 0);
+            executaAjaxGet('/investimento/listaTransacoes/'+topping,'listaTransacoes',function(){}, function(){});
+          }
+        }
+
+        google.visualization.events.addListener(chart, 'select', selectHandler);
+          chart.draw(dataTableObject, options);
+          }
+        });
+      }
+/*]]>*/
+
+
+
+        </script>
+        <script id="graficoLinha" type="text/javascript" th:each="investimento : ${cliente.investimentos}" th:inline="javascript">
+ /*<![CDATA[*/
+
+      google.charts.load('current', {'packages':['corechart']});
+      google.charts.setOnLoadCallback(drawChart[[${investimento.idInvestimento}]]);
+
+      function drawChart[[${investimento.idInvestimento}]]() {
+      var urlGraficoTransacao = '/investimento/obterGraficoInvestimento/' + [[${investimento.idInvestimento}]];
+      $.ajax({
+          url: urlGraficoTransacao,
+          dataType: "json",
+          success: function(data){
+          var dataTableObject = new google.visualization.DataTable(data);
+          var options = {
+            title: [[${investimento.tipoInvestimento.descTipoInvestimento}]],
+            legend: { position: 'bottom' },
+            hAxis: {
+            direction: -1,
+            slantedText: true,
+            slantedTextAngle: 45}
+          };
+          var chart = new google.visualization.LineChart(document.getElementById('linechart' + [[${investimento.idInvestimento}]]));
+          chart.draw(dataTableObject, options);
+          }
+        });
+      }
+      /*]]>*/
+        </script>
+
+        <script type="text/javascript">
+        $(window).resize(function () {
+            if($(window).width()!= window_width){
+                window_width = $(window).width();
+                drawPieChart();
+                $(window).trigger("window:resize")
+            }
+        });
+        </script>
+        <script type="text/javascript" th:each="investimento : ${cliente.investimentos}" th:inline="javascript">
+       /*<![CDATA[*/
+        $(window).on("window:resize", function (e) {
+        drawChart[[${investimento.idInvestimento}]]();
+        })
+       /*]]>*/
+        </script>
+
+    </div>
+    <footer id="myFooter" th:replace="fragments/_footerCompleto"/>
+</div>

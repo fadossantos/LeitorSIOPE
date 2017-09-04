@@ -1,0 +1,83 @@
+<div id="espacoPendencia">
+    <div class="card" style="margin-top: 15px;margin-bottom: 15px;" th:if="${pendencia} != null">
+        <div class="card-block">
+            <form id="formPendencia" role="form" action="#" th:action="@{/pendencia/salvarPendencia}" method="post"
+                  th:object="${pendencia}">
+                <ul th:if="${#fields.hasErrors('*')}" class="errorlist">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}">Dados
+                        Incorretos
+                    </li>
+                </ul>
+                <input type="hidden" th:field="*{idPendencia}"/>
+                <input type="hidden" th:field="*{cliente.idPessoa}"/>
+                <div class="form-group">
+                    <label for="situacaoPendencia">Situação da Pendência</label>
+                    <select class="form-control" th:field="*{situacaoPendencia}" th:errorclass="fieldError">
+                        <option th:each="situacaoPendencia : ${listaSituacaoPendencia}"
+                                th:value="${situacaoPendencia.idSituacaoPendencia}"
+                                th:text="${situacaoPendencia.descSituacaoPendencia}">Situação Pendencia
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="tipoPendencia">Tipo da Pendência</label>
+                    <select class="form-control" th:field="*{tipoPendencia}" th:errorclass="fieldError">
+                        <option th:each="tipoPendencia : ${listaTipoPendencia}"
+                                th:value="${tipoPendencia.idTipoPendencia}"
+                                th:text="${tipoPendencia.descTipoPendencia}">Tipo Pendencia
+                        </option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="descPendencia">Descrição da Pendência</label>
+                    <input type="text" class="form-control" th:field="*{descPendencia}"
+                           aria-describedby="descPendenciaHelp"
+                           placeholder="Descrição da Pendência" th:errorclass="fieldError"/>
+                    <small id="descPendenciaHelp" class="form-text text-muted">Preencha com a descrição da pendência.
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="funcionarioResponsavel">Funcionário Responsável</label>
+                    <select class="form-control" th:field="*{funcionarioResponsavel}" th:errorclass="fieldError">
+                        <option th:each="funcionario : ${listaFuncionarios}"
+                                th:value="${funcionario.idPessoa}"
+                                th:text="${funcionario.nome}">Nome Funcionario
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="observacao">Observação</label>
+                    <input type="hidden" th:field="*{observacao.idObservacao}"/>
+                    <textarea class="form-control" th:field="*{observacao.descObservacao}"
+                              aria-describedby="observacaoHelp"
+                              placeholder="Observação" th:errorclass="fieldError"/>
+                    <small id="observacaoHelp" class="form-text text-muted">Observação sobre o pendencia.</small>
+                </div>
+
+                <button type="button" onclick="submitFormPendencia();" class="btn btn-primary">Salvar</button>
+            </form>
+            <script type="text/javascript">
+					function submitFormPendencia() {
+  						var url = "/pendencia/salvarPendencia";
+  						$.ajax({
+  							type: "POST",
+  							url: url,
+  							data: $("#formPendencia").serialize(),
+  							success: function(data)
+  							{
+  								$('#espacoPendencia').replaceWith(data);
+  							}
+  						});
+  					};
+
+  					$('.usaCalendario').datetimepicker({
+		                format : 'd/m/Y'
+	                });
+
+
+            </script>
+        </div>
+    </div>
+</div>
