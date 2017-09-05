@@ -1,9 +1,0 @@
-<div th:id = "'selectCidade'+${id}" class="form-group">
-    <label for="cidade">Cidade</label>
-    <select class="form-control" th:id = "'enderecos'+${id}+'.cidade.idCidade'" th:name = "'enderecos['+${id}+'].cidade.idCidade'" >
-        <option th:each="cidade : ${listaCidades}"
-                th:value="${cidade.idCidade}"
-                th:text="${cidade.descCidade}">Estado
-        </option>
-    </select>
-</div>

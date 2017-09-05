@@ -1,1 +1,11 @@
-<div id="corpoPrincipal" th:replace="fragments/_index"/>
+<div id="corpoPrincipal">
+    <div>
+        <form method="POST" enctype="multipart/form-data" th:action="@{/fileupload}">
+            <table>
+                <tr><td>Arquivo da Folha:</td><td><input type="file" name="file" /></td></tr>
+                <tr><td></td><td><input type="submit" value="Processar" /></td></tr>
+            </table>
+        </form>
+    </div>
+    <footer id="myFooter" th:replace="fragments/_footerCompleto"/>
+</div>
